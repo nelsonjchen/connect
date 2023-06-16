@@ -365,7 +365,7 @@ class Media extends Component {
   async uploadFilesAll(types) {
     const { dongleId, device, currentRoute, loop, files } = this.props;
     if (types === undefined) {
-      types = ['logs', 'cameras', 'dcameras'];
+      types = ['logs', 'cameras'];
       if (device.device_type?.startsWith('three')) {
         types.push('ecameras');
       }
@@ -722,6 +722,33 @@ class Media extends Component {
               className={ classes.uploadButton }
               style={{ minWidth: uploadButtonWidth }}
               onClick={ () => this.uploadFilesAll() }
+            >
+              {`upload ${stats.canRequestAll} files`}
+            </Button>
+            )}
+            { Boolean(canUpload && allUploadDisabled && stats)
+            && (
+            <div className={ classes.fakeUploadButton } style={{ minWidth: (uploadButtonWidth - 24) }}>
+              { stats.isUploadedAll
+                ? 'uploaded'
+                : (stats.isUploadingAll ? 'pending' : <CircularProgress style={{ color: Colors.white }} size={ 17 } />)}
+            </div>
+            )}
+          </MenuItem>
+          <MenuItem
+            className={ classes.filesItem }
+            disabled
+            style={ files && stats ? { pointerEvents: 'auto' } : { color: Colors.white60 } }
+          >
+            All files except driver
+            { Boolean(files && canUpload && !allUploadDisabled)
+            && (
+            <Button
+              className={ classes.uploadButton }
+              style={{ minWidth: uploadButtonWidth }}
+                onClick={() => this.uploadFilesAll(
+                  ['logs', 'cameras', "ecameras"]
+              ) }
             >
               {`upload ${stats.canRequestAll} files`}
             </Button>
